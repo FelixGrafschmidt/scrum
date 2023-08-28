@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<FGButton label="Copy Link" class="mb-2" @click="copyLink" />
 		<div v-if="revealed">
 			<div v-for="([vote, names], i) in votes" :key="i" :class="{ 'text-xl text-green': most === i }">
 				{{ names.length }} person(s) voted {{ vote }} ({{ names.join(", ") }})
@@ -93,5 +94,11 @@
 				task.value = data;
 			}
 		});
+	}
+
+	async function copyLink() {
+		const url = new URL(window.location.href);
+		url.pathname = url.pathname.replace("results", "vote");
+		await navigator.clipboard.writeText(url.toString());
 	}
 </script>
