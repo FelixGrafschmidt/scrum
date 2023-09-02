@@ -1,17 +1,19 @@
 <template>
-	<div class="flex flex-col">
-		<header class="flex flex-row justify-between border-b p-4">
-			<h1 class="w-1/3 text-xl">Scrum Poker Planner</h1>
-			<client-only>
-				<span class="w-1/3 text-center text-lg">{{ name }}</span>
-				<span class="w-1/3 text-end text-lg">{{ username }}</span>
-			</client-only>
+	<div class="flex flex-col divide-y">
+		<header class="w-screen flex flex-row justify-center">
+			<div class="w-4xl flex flex-row justify-between py-4">
+				<h1 class="w-1/3 text-2xl">Scrum Poker Planner</h1>
+				<client-only>
+					<span class="w-1/3 text-center text-lg">{{ name }}</span>
+					<span class="w-1/3 text-end text-lg">{{ username }}</span>
+				</client-only>
+			</div>
 		</header>
-		<main class="flex-grow items-start justify-start p-4">
-			<NuxtPage />
+		<main class="w-screen flex flex-grow items-start justify-center py-4">
+			<NuxtPage class="w-4xl" />
 		</main>
-		<footer class="border-t p-4">
-			<div py-2 text-center>&copy; Felix Grafschmidt {{ new Date().getFullYear() }}</div>
+		<footer class="w-screen flex justify-center py-4">
+			<div class="w-4xl py-2 text-center">&copy; Felix Grafschmidt {{ new Date().getFullYear() }}</div>
 		</footer>
 	</div>
 </template>

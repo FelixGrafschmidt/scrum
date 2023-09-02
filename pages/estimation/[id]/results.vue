@@ -1,14 +1,18 @@
 <template>
 	<div>
-		<FGButton label="Copy Link" class="mb-2" @click="copyLink" />
+		<FGButton label="Copy Link" size="2xl" class="mb-2" @click="copyLink" />
 		<div v-if="revealed">
 			<div v-for="([vote, names], i) in votes" :key="i" :class="{ 'text-xl text-green': most === i }">
 				{{ names.length }} person(s) voted {{ vote }} ({{ names.join(", ") }})
 			</div>
 		</div>
-		<div v-else>
-			<span> {{ Object.keys(task.votes || []).length }} person(s) voted so far </span>
+		<div v-else class="flex flex-col">
+			<span> {{ Object.keys(task.votes || []).length }} person(s) connected </span>
+			<span> {{ Object.values(task.votes || []).filter((e) => e !== null).length }} person(s) voted so far </span>
 			<FGButton class="mt-4" color="teal" label="Reveal" size="3xl" @click="revealed = true" />
+		</div>
+		<div mt-4>
+			<FGButton label="Repeat Vote" class="mb-2" @click="repeatVote" />
 		</div>
 	</div>
 </template>
@@ -36,6 +40,9 @@
 		}
 		const result: Record<string, string[]> = {};
 		Object.entries(task.value.votes).forEach(([name, vote]) => {
+			if (vote === null) {
+				return;
+			}
 			if (!result[vote]) {
 				result[vote] = [];
 			}
@@ -94,6 +101,18 @@
 				task.value = data;
 			}
 		});
+	}
+
+	async function repeatVote() {
+		try {
+			await useFetch("/api/repeat", {
+				body: { name: task.value.name, options: task.value.options, id: task.value.id, votes: {} },
+				method: "POST",
+			});
+			return await navigateTo({ name: "estimation-id-results" });
+		} catch (error) {
+			console.error(error);
+		}
 	}
 
 	async function copyLink() {
