@@ -29,7 +29,7 @@
 			</div>
 		</div>
 		<div class="grid-area-[primary] flex flex-row items-center justify-center border-r px-12">
-			<FGButton color="teal" label="Reveal" size="3xl" block @click="revealed = true" />
+			<FGButton color="teal" label="Reveal" size="3xl" fullwidth @click="revealed = true" />
 		</div>
 	</div>
 </template>

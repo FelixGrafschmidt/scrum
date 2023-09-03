@@ -45,7 +45,7 @@
 		"pusher-js": "^8.3.0",
 		"tslib": "^2.6.0",
 		"typescript": "^5.1.6",
-		"ui.felgraf.dev": "^1.0.6",
+		"ui.felgraf.dev": "^1.0.7",
 		"unload": "^2.4.1",
 		"unocss": "^0.53.5",
 		"unocss-preset-scrollbar": "^0.2.1",

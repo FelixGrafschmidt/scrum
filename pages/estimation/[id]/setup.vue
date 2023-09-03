@@ -42,7 +42,7 @@
 			</div>
 		</div>
 		<div class="grid-area-[primary] flex flex-row items-center justify-center border-r px-12">
-			<FGButton :color="title ? 'teal' : 'gray'" :disabled="!title" label="Start" size="3xl" block @click="start" />
+			<FGButton :color="title ? 'teal' : 'gray'" :disabled="!title" label="Start" size="3xl" fullwidth @click="start" />
 		</div>
 	</div>
 </template>
