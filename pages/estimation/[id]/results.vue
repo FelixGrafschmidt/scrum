@@ -10,7 +10,7 @@
 				</div>
 			</div>
 			<div v-else class="flex flex-col">
-				<!-- <span> {{ Object.keys(task.votes || []).length }} person(s) connected </span> -->
+				<span> {{ Object.keys(task.votes || []).length }} person(s) connected </span>
 				<span> {{ Object.values(task.votes || []).filter((e) => e !== null).length }} person(s) voted so far </span>
 			</div>
 		</div>
@@ -121,9 +121,13 @@
 	}
 
 	async function repeatVote() {
+		const emptyVotes: { [key: string]: string | null } = {};
+		Object.keys(task.value.votes!).forEach((name) => {
+			emptyVotes[name] = null;
+		});
 		try {
 			await useFetch("/api/repeat", {
-				body: { name: task.value.name, options: task.value.options, id: task.value.id, votes: {} },
+				body: { name: task.value.name, options: task.value.options, id: task.value.id, votes: emptyVotes },
 				method: "POST",
 			});
 			revealed.value = false;

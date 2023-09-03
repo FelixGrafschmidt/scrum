@@ -14,7 +14,7 @@
 				class="mx-2 my-4 max-h-[60vh] flex flex-row flex-wrap overflow-y-auto scrollbar-thumb-color-gray-7 scrollbar-track-color-gray-5 scrollbar-radius-2 scrollbar-thumb-radius-4 scrollbar-track-radius-4 scrollbar-w-2 scrollbar scrollbar-rounded"
 			>
 				<div
-					v-for="(option, i) in task.options"
+					v-for="(option, i) in task.options?.sort((a, b) => ('' + a).localeCompare(b, undefined, { numeric: true }))"
 					:key="i"
 					class="m-2 w-47% border rounded bg-gray-6 px-4 py-4"
 					:class="{
@@ -36,7 +36,7 @@
 				</div>
 			</div>
 			<div v-else class="flex flex-col">
-				<!-- <span> {{ Object.keys(task.votes || []).length }} person(s) connected </span> -->
+				<span> {{ Object.keys(task.votes || []).length }} person(s) connected </span>
 				<span> {{ Object.values(task.votes || []).filter((e) => e !== null).length }} person(s) voted so far </span>
 				<FGButton v-if="voted" class="mt-4" color="teal" label="Reveal" size="3xl" @click="revealed = true" />
 			</div>
@@ -47,6 +47,7 @@
 
 <script setup lang="ts">
 	import Pusher from "pusher-js";
+	import { add } from "unload";
 
 	const task: Ref<Task> = ref({});
 	const voted = ref(false);
@@ -110,6 +111,12 @@
 
 	onMounted(async () => {
 		try {
+			setupWebSocket();
+		} catch (err) {
+			console.log(err);
+		}
+
+		try {
 			await $fetch("/api/register", {
 				body: { id: useRoute().params.id, username: useLocalStorage("name", "").value },
 				method: "POST",
@@ -118,22 +125,13 @@
 			console.error(error);
 		}
 
-		try {
-			setupWebSocket();
-		} catch (err) {
-			console.log(err);
-		}
-
-		// TODO: Does not work correctly, "visibiltychange" is also fired when the user switches to another tab
-		// document.addEventListener("visibilitychange", async function logData() {
-		// 	if (document.visibilityState === "hidden") {
-		// 		await useFetch("/api/unregister", {
-		// 			body: { id: useRoute().params.id, username: useLocalStorage("name", "").value },
-		// 			method: "POST",
-		// 			keepalive: true,
-		// 		});
-		// 	}
-		// });
+		add(async () => {
+			await useFetch("/api/unregister", {
+				body: { id: useRoute().params.id, username: useLocalStorage("name", "").value },
+				method: "POST",
+				keepalive: true,
+			});
+		});
 	});
 
 	function setupWebSocket() {

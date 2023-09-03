@@ -11,7 +11,11 @@
 			<div
 				class="my-2 max-h-[60vh] flex flex-row flex-wrap overflow-y-auto scrollbar-thumb-color-gray-7 scrollbar-track-color-gray-5 scrollbar-radius-2 scrollbar-thumb-radius-4 scrollbar-track-radius-4 scrollbar-w-2 scrollbar scrollbar-rounded"
 			>
-				<div v-for="(option, i) in options" :key="i" class="relative m-2 w-47% rounded bg-gray-6 px-4 py-4">
+				<div
+					v-for="(option, i) in options.sort((a, b) => ('' + a).localeCompare(b.toString(), undefined, { numeric: true }))"
+					:key="i"
+					class="relative m-2 w-47% rounded bg-gray-6 px-4 py-4"
+				>
 					{{ option }}
 					<FGButton icon="fa:remove" size="lg" class="absolute right-4 top-4" color="red" @click="remove(option)" />
 				</div>
