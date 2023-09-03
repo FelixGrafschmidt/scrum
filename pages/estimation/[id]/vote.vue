@@ -11,12 +11,12 @@
 		</div>
 		<div class="grid-area-[options] border-x">
 			<div
-				class="my-4 mr-2 max-h-[60vh] flex flex-col overflow-y-auto pl-4 scrollbar-thumb-color-gray-7 scrollbar-track-color-gray-5 scrollbar-radius-2 scrollbar-thumb-radius-4 scrollbar-track-radius-4 scrollbar-w-2 scrollbar scrollbar-rounded"
+				class="mx-2 my-4 max-h-[60vh] flex flex-row flex-wrap overflow-y-auto scrollbar-thumb-color-gray-7 scrollbar-track-color-gray-5 scrollbar-radius-2 scrollbar-thumb-radius-4 scrollbar-track-radius-4 scrollbar-w-2 scrollbar scrollbar-rounded"
 			>
 				<div
 					v-for="(option, i) in task.options"
 					:key="i"
-					class="my-2 mr-2 border rounded bg-gray-6 px-4 py-4"
+					class="m-2 w-47% border rounded bg-gray-6 px-4 py-4"
 					:class="{
 						'cursor-pointer hover:bg-gray-5 opacity-100': !voted,
 						'opacity-70': voted,

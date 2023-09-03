@@ -9,9 +9,9 @@
 		<div class="grid-area-[options] flex flex-col border-l border-r p-2">
 			<span class="text-xl">Options</span>
 			<div
-				class="my-2 max-h-[60vh] flex flex-col overflow-y-auto scrollbar-thumb-color-gray-7 scrollbar-track-color-gray-5 scrollbar-radius-2 scrollbar-thumb-radius-4 scrollbar-track-radius-4 scrollbar-w-2 scrollbar scrollbar-rounded"
+				class="my-2 max-h-[60vh] flex flex-row flex-wrap overflow-y-auto scrollbar-thumb-color-gray-7 scrollbar-track-color-gray-5 scrollbar-radius-2 scrollbar-thumb-radius-4 scrollbar-track-radius-4 scrollbar-w-2 scrollbar scrollbar-rounded"
 			>
-				<div v-for="(option, i) in options" :key="i" class="relative my-2 mr-2 rounded bg-gray-6 px-4 py-4">
+				<div v-for="(option, i) in options" :key="i" class="relative m-2 w-47% rounded bg-gray-6 px-4 py-4">
 					{{ option }}
 					<FGButton icon="fa:remove" size="lg" class="absolute right-4 top-4" color="red" @click="remove(option)" />
 				</div>
@@ -79,7 +79,7 @@
 				method: "POST",
 			});
 			const url = new URL(window.location.href);
-			url.pathname = url.pathname.replace("results", "vote");
+			url.pathname = url.pathname.replace("setup", "vote");
 			await navigator.clipboard.writeText(url.toString());
 			return await navigateTo({ name: "estimation-id-results" });
 		} catch (error) {
