@@ -6,7 +6,7 @@
 		<div class="grid-area-[name] border-b border-r">
 			<label class="w-full flex flex-col gap-1 px-4 py-2">
 				<span class="text-2xl">Name</span>
-				<input v-model="name" class="h-8 w-64 rounded bg-gray-4 px-2 py-1 text-gray-8" />
+				<input v-model="useLocalStorage('name', '').value" class="h-8 w-64 rounded bg-gray-4 px-2 py-1 text-gray-8" />
 			</label>
 		</div>
 		<div class="grid-area-[options] border-x">
@@ -64,8 +64,6 @@
 		});
 		return result;
 	});
-
-	const name = ref(useLocalStorage("name", "").value);
 
 	const votes = computed(() => {
 		if (!task.value.votes) {
@@ -149,7 +147,7 @@
 		channel.bind("update", function (data: Task) {
 			if (data.id === useRoute().params.id) {
 				task.value = data;
-				if (!data.votes?.[name.value]) {
+				if (!data.votes?.[useLocalStorage("name", "").value]) {
 					voted.value = false;
 					revealed.value = false;
 				}
