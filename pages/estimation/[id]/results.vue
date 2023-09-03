@@ -1,18 +1,35 @@
 <template>
-	<div>
-		<FGButton label="Copy Link" size="2xl" class="mb-2" @click="copyLink" />
-		<div v-if="revealed">
-			<div v-for="([vote, names], i) in votes" :key="i" :class="{ 'text-xl text-green': most === i }">
-				{{ names.length }} person(s) voted {{ vote }} ({{ names.join(", ") }})
+	<div class="template grid h-full">
+		<div class="grid-area-[title] flex flex-row items-center justify-start border-x border-b pl-4">
+			<span class="text-3xl font-semibold"> {{ task.name }}</span>
+		</div>
+		<div class="grid-area-[options] flex flex-col border-l border-r p-4">
+			<div v-if="revealed">
+				<div v-for="([v, names], i) in votes" :key="i" :class="{ 'text-xl text-green': most === i }">
+					{{ names.length }} person(s) voted {{ v }} ({{ names.join(", ") }})
+				</div>
+			</div>
+			<div v-else class="flex flex-col">
+				<!-- <span> {{ Object.keys(task.votes || []).length }} person(s) connected </span> -->
+				<span> {{ Object.values(task.votes || []).filter((e) => e !== null).length }} person(s) voted so far </span>
 			</div>
 		</div>
-		<div v-else class="flex flex-col">
-			<span> {{ Object.keys(task.votes || []).length }} person(s) connected </span>
-			<span> {{ Object.values(task.votes || []).filter((e) => e !== null).length }} person(s) voted so far </span>
-			<FGButton class="mt-4" color="teal" label="Reveal" size="3xl" @click="revealed = true" />
+		<div class="grid-area-[secondary] flex flex-col justify-evenly gap-4 border-b border-r p-4">
+			<div
+				class="h-full w-full flex flex-row cursor-pointer items-center justify-center rounded bg-gray-6 text-xl hover:bg-gray-5"
+				@click="copyLink"
+			>
+				Copy Link
+			</div>
+			<div
+				class="h-full w-full flex flex-row cursor-pointer items-center justify-center rounded bg-gray-6 text-xl hover:bg-gray-5"
+				@click="repeatVote"
+			>
+				Repeat Vote
+			</div>
 		</div>
-		<div mt-4>
-			<FGButton label="Repeat Vote" class="mb-2" @click="repeatVote" />
+		<div class="grid-area-[primary] flex flex-row items-center justify-center border-r px-12">
+			<FGButton color="teal" label="Reveal" size="3xl" block @click="revealed = true" />
 		</div>
 	</div>
 </template>
@@ -109,7 +126,7 @@
 				body: { name: task.value.name, options: task.value.options, id: task.value.id, votes: {} },
 				method: "POST",
 			});
-			return await navigateTo({ name: "estimation-id-results" });
+			revealed.value = false;
 		} catch (error) {
 			console.error(error);
 		}
@@ -121,3 +138,15 @@
 		await navigator.clipboard.writeText(url.toString());
 	}
 </script>
+
+<style scoped>
+	.template {
+		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-rows: 0.5fr 1fr 1fr 1fr;
+		grid-template-areas:
+			"title title title"
+			"options options secondary"
+			"options options secondary"
+			"options options primary";
+	}
+</style>

@@ -16,10 +16,6 @@ export default defineEventHandler(async (event) => {
 		setResponseStatus(event, 400);
 		return;
 	}
-	if (!option) {
-		setResponseStatus(event, 400);
-		return;
-	}
 	if (!id) {
 		setResponseStatus(event, 400);
 		return;

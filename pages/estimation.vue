@@ -4,12 +4,11 @@
 			<div class="w-4xl flex flex-row justify-between py-4">
 				<h1 class="w-1/3 text-2xl">Scrum Poker Planner</h1>
 				<client-only>
-					<span class="w-1/3 text-center text-lg">{{ name }}</span>
 					<span class="w-1/3 text-end text-lg">{{ username }}</span>
 				</client-only>
 			</div>
 		</header>
-		<main class="w-screen flex flex-grow items-start justify-center py-4">
+		<main class="w-screen flex flex-grow items-start justify-center">
 			<NuxtPage class="w-4xl" />
 		</main>
 		<footer class="w-screen flex justify-center py-4">
@@ -35,6 +34,4 @@
 	});
 
 	const username = useLocalStorage("name", "");
-
-	const name = useState("name");
 </script>

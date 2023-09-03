@@ -1,37 +1,47 @@
 <template>
-	<div v-if="task.votes?.[useLocalStorage('name', '').value]">
-		<div v-if="revealed">
-			<div v-for="([v, names], i) in votes" :key="i" :class="{ 'text-xl text-green': most === i }">
-				{{ names.length }} person(s) voted {{ v }} ({{ names.join(", ") }})
-			</div>
+	<div class="template grid h-full">
+		<div class="grid-area-[title] flex flex-row items-center justify-start border-x border-b pl-4">
+			<span class="text-3xl font-semibold"> {{ task.name }}</span>
 		</div>
-		<div v-else>
-			<span>
-				{{ Object.keys(task.votes || []).length }} person(s) voted so far (Your vote:
-				{{ task.votes?.[useLocalStorage("name", "").value] }})
-			</span>
-			<FGButton class="mt-4" color="teal" label="Reveal" size="3xl" @click="revealed = true" />
-		</div>
-	</div>
-	<div v-else>
-		<div>
-			<label class="mb-4 flex flex-col gap-2">
-				<span class="text-xl">Name</span>
-				<input v-model="useLocalStorage('name', '').value" class="w-1/6 rounded bg-gray-4 px-2 py-1 text-gray-8" />
+		<div class="grid-area-[name] border-b border-r">
+			<label class="w-full flex flex-col gap-1 px-4 py-2">
+				<span class="text-2xl">Name</span>
+				<input v-model="name" class="h-8 w-64 rounded bg-gray-4 px-2 py-1 text-gray-8" />
 			</label>
 		</div>
-		<div v-if="task" class="mt-8 w-2/3 flex flex-col">
-			<div class="w-full columns-2">
+		<div class="grid-area-[options] border-x">
+			<div
+				class="my-4 mr-2 max-h-[60vh] flex flex-col overflow-y-auto pl-4 scrollbar-thumb-color-gray-7 scrollbar-track-color-gray-5 scrollbar-radius-2 scrollbar-thumb-radius-4 scrollbar-track-radius-4 scrollbar-w-2 scrollbar scrollbar-rounded"
+			>
 				<div
 					v-for="(option, i) in task.options"
 					:key="i"
-					class="my-2 cursor-pointer rounded bg-gray-6 px-4 py-2 first:my-0 first:mb-2 hover:bg-gray-5"
-					@click="vote(option)"
+					class="my-2 mr-2 border rounded bg-gray-6 px-4 py-4"
+					:class="{
+						'cursor-pointer hover:bg-gray-5 opacity-100': !voted,
+						'opacity-70': voted,
+						'border-teal': option.toString() === yourvote.toString(),
+						'border-gray-6': option.toString() !== yourvote.toString(),
+					}"
+					@click="voted ? undefined : vote(option)"
 				>
 					{{ option }}
 				</div>
 			</div>
 		</div>
+		<div class="grid-area-[secondary] border-r p-4">
+			<div v-if="revealed">
+				<div v-for="([v, names], i) in votes" :key="i" :class="{ 'text-xl text-green': most === i }">
+					{{ names.length }} person(s) voted {{ v }} ({{ names.join(", ") }})
+				</div>
+			</div>
+			<div v-else class="flex flex-col">
+				<!-- <span> {{ Object.keys(task.votes || []).length }} person(s) connected </span> -->
+				<span> {{ Object.values(task.votes || []).filter((e) => e !== null).length }} person(s) voted so far </span>
+				<FGButton v-if="voted" class="mt-4" color="teal" label="Reveal" size="3xl" @click="revealed = true" />
+			</div>
+		</div>
+		<div class="grid-area-[primary] border-r"></div>
 	</div>
 </template>
 
@@ -39,7 +49,9 @@
 	import Pusher from "pusher-js";
 
 	const task: Ref<Task> = ref({});
+	const voted = ref(false);
 	const revealed = ref(false);
+	const yourvote = ref("");
 	const most = computed(() => {
 		let result = -1;
 		let value = -1;
@@ -51,6 +63,8 @@
 		});
 		return result;
 	});
+
+	const name = ref(useLocalStorage("name", "").value);
 
 	const votes = computed(() => {
 		if (!task.value.votes) {
@@ -137,6 +151,10 @@
 		channel.bind("update", function (data: Task) {
 			if (data.id === useRoute().params.id) {
 				task.value = data;
+				if (!data.votes?.[name.value]) {
+					voted.value = false;
+					revealed.value = false;
+				}
 			}
 		});
 	}
@@ -147,8 +165,22 @@
 				body: { id: useRoute().params.id, option, username: useLocalStorage("name", "").value },
 				method: "POST",
 			});
+			voted.value = true;
+			yourvote.value = option;
 		} catch (error) {
 			console.error(error);
 		}
 	}
 </script>
+
+<style scoped>
+	.template {
+		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-rows: 0.5fr 1fr 1fr 1fr;
+		grid-template-areas:
+			"title title name"
+			"options options secondary"
+			"options options secondary"
+			"options options secondary";
+	}
+</style>
