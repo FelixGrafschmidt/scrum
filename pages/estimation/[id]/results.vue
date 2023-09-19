@@ -143,9 +143,13 @@
 	}
 
 	async function newVote() {
+		const emptyVotes: { [key: string]: string | null } = {};
+		Object.keys(task.value.votes || {}).forEach((name) => {
+			emptyVotes[name] = null;
+		});
 		try {
 			await useFetch("/api/reset", {
-				body: { name: "", options: [], id: task.value.id, votes: {} },
+				body: { name: "", options: [], id: task.value.id, votes: emptyVotes },
 				method: "POST",
 			});
 			return await navigateTo({ name: "estimation-id-setup" });
