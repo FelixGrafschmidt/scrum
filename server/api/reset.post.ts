@@ -10,10 +10,10 @@ const pusher = new Pusher({
 });
 
 export default defineEventHandler(async (event) => {
-	const { name, options, id } = await readBody(event);
+	const task = await readBody(event);
 	try {
-		await kv.set(`estimation-${id}`, JSON.stringify({ name, options, id }));
-		await pusher.trigger(id, "update", { name, options, id });
+		await kv.set(`estimation-${task.id}`, JSON.stringify(task));
+		await pusher.trigger(task.id, "update", task);
 		return 204;
 	} catch (error) {
 		console.error(error);

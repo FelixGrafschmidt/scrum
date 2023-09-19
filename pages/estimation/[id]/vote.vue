@@ -146,6 +146,11 @@
 		const channel = pusher.subscribe(channelName.toString());
 		channel.bind("update", function (data: Task) {
 			if (data.id === useRoute().params.id) {
+				if (task.value.name !== data.name) {
+					voted.value = false;
+					revealed.value = false;
+					yourvote.value = "";
+				}
 				task.value = data;
 				if (!data.votes?.[useLocalStorage("name", "").value]) {
 					voted.value = false;

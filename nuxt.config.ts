@@ -3,4 +3,9 @@ export default defineNuxtConfig({
 	devtools: { enabled: true },
 	modules: ["@pinia/nuxt", "@unocss/nuxt", "nuxt-icon", "@vueuse/nuxt", "ui.felgraf.dev"],
 	vite: {},
+	app: {
+		head: {
+			title: "Scrum Poker Planner",
+		},
+	},
 });

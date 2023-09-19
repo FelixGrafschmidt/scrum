@@ -27,6 +27,12 @@
 			>
 				Repeat Vote
 			</div>
+			<div
+				class="h-full w-full flex flex-row cursor-pointer items-center justify-center rounded bg-gray-6 text-xl hover:bg-gray-5"
+				@click="newVote"
+			>
+				New Vote
+			</div>
 		</div>
 		<div class="grid-area-[primary] flex flex-row items-center justify-center border-r px-12">
 			<FGButton color="teal" label="Reveal" size="3xl" fullwidth @click="revealed = true" />
@@ -131,6 +137,18 @@
 				method: "POST",
 			});
 			revealed.value = false;
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	async function newVote() {
+		try {
+			await useFetch("/api/reset", {
+				body: { name: "", options: [], id: task.value.id, votes: {} },
+				method: "POST",
+			});
+			return await navigateTo({ name: "estimation-id-setup" });
 		} catch (error) {
 			console.error(error);
 		}
